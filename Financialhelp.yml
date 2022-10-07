@@ -1,0 +1,105 @@
+---
+# First question in application
+question: Welcome to the Financial Counselling servinces
+mandatory: True
+subquestion: | 
+  
+  This service can help you with matters regarding:
+  
+  Financial counselling can help you with things like:
+
+  Bills or fines you’re struggling to pay
+  
+  Being harassed by debt collectors
+  
+  Gas, electricity or phone disconnection
+  
+  Being evicted from your house
+  
+  Car accidents with no insurance
+  
+  Tax debts
+  
+  In a caring and non-judgemental way, we will listen to you and help you understand your available options. We can help you with budgeting and managing your money, and provide you with information about your rights as a consumer. We can support and advocate for you, which may include helping you to speak with your creditors, or speaking with them on your behalf. 
+  
+  Press *continue* to continue, or *exit* 
+  
+Buttons:
+  - Continue: continue
+  - Exit: exit
+    url: https://ucwb.org.au/financial-counselling/
+---
+question: Please answer the questions
+fields: 
+  - Candidate name: candidate_name
+  - Candidate age: candidate_age
+    datatype: integer
+  - Candidate an Australian citizen: candidate_citizen
+    datatype: yesnoradio
+---
+mandatory: True
+code: |
+  candidate_name = candidate_name.title() # string function to make the first letter a capital if not already so for all words in string
+  if candidate_age >= 18 and candidate_citizen: 
+    is_eligible = True
+  else:
+    candidate_ineligible
+---
+# on success path
+mandatory: True
+question: |
+  What services do you require?
+subquestion: |
+  Please choose from the dropdown box whatever is approriate to your circumstances
+field: membership
+dropdown:
+  - I am struggling to pay my bills or fines
+  - I am being harassed by debt collectors
+  - My amenities, such as gas, electricity or phone have been disconnected
+  - I am being evicted from my home
+  - I have had a car accident and I have no insurance
+  - I have tax debts
+---
+# on success path
+mandatory: True
+question:  |
+ Would you like an appointment?
+fields:
+  - Would you like an in-person appointment: is_yes
+    datatype: yesnoradio
+    help: |
+      These are the locations that we currently provide services to: Cheltenham area, Croydon Park area, Findon area, Hilton area, Marion area, Plympton area, Woodville Gardens area. 
+---
+mandatory: True
+code: |
+  if is_yes and is_eligible:
+    is_parliment_verified = True
+  else:
+    candidate_ineligible
+---
+# on success path - section 44 - Interview end state for successful progression
+mandatory: True
+question: |
+  ${candidate_name}! Because of your responses, you are elgible to recieve the financial counselling services provided by UCWB. 
+subquestion:  |
+
+  Please, use the URL below to access the website to fill out the referral form.
+  
+  Alternatively, you may contact the financial counselling services team on this number: 
+
+buttons:
+  - Restart: restart
+  - Exit: exit
+    url: https://ucwb.org.au/financial-counselling/
+---
+# not eligible event - candidate
+event: candidate_ineligible
+question: |
+  ${candidate_name} is ineligible to proceed with the financial counselling program
+subquestion: |
+  Sorry ${candidate_name}, but only eligible candidates may recieve financial counselling from UCWB. 
+buttons:
+  - Restart: restart
+  - Exit: exit
+    url: https://ucwb.org.au/escaping-violence-payment/
+---
