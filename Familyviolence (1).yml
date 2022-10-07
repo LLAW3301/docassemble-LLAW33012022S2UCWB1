@@ -1,0 +1,130 @@
+---
+  #Welcome screen - table
+---
+question: Escaping Family violence payments
+mandatory: true
+subquestion:  |
+  
+    Welcome to this application. I am going to answer some questions to better assist you to help point you in the right direction. I will need to know some of your information. Please answer where you can. 
+    
+    
+    If you are in danger, or imminent crisis please contact: 000
+    
+    If you are experiencing family violence and require immediate suppport or advice please call these number: 
+    
+    1800 RESPECT: 1800 737 732
+    
+    Women’s Safety Services SA DV Crisis Line: 1800 800 098
+    
+    Press *continue* to continue, or *exit* to exit to the UCWB website
+
+Buttons:
+  - continue: continue
+  - exit: exit
+    url: https://ucwb.org.au/escaping-violence-payment/
+--- 
+question: Please answer the questions
+fields: 
+  - Candidate name: candidate_name
+  - Candidate age: candidate_age
+    datatype: integer
+  - Candidate an Australian citizen: candidate_citizen
+    datatype: yesnoradio
+---
+mandatory: True
+code: |
+  candidate_name = candidate_name.title() # string function to make the first letter a capital if not already so for all words in string
+  if candidate_age >= 18 and candidate_citizen: 
+    is_eligible = True
+  else:
+    candidate_ineligible
+    
+---
+# on success path
+mandatory: True
+question:  |
+ Are you in an intimate relationship and experiencing domestic violence?
+fields:
+  - Is the candidate experencing DV: is_DV 
+    datatype: yesnoradio
+    help: |
+      Family and domestic violence is any violent, threatening, coercive or controlling behaviour that occurs in current or past family, domestic or intimate relationships.
+---
+mandatory: True
+code: |
+  if is_DV and is_eligible:
+    is_parliment_verified = True
+  else:
+    candidate_ineligible
+---
+# on success path
+mandatory: True
+question: |
+  What are your current living arrangements?
+subquestion: |
+  Please choose from the dropdown box that best suits your situation. 
+field: membership
+dropdown:
+  - I refuse to change my living arrangements
+  - My living arrangements have not changed
+  - My living arrangements have changed
+---
+mandatory: True
+code: |
+  if membership != 'My living arrangements have changed': 
+    living_ineligible
+---
+# on success path
+mandatory: True
+question:  |
+ Are you experiencing financial stress?
+fields:
+  - Is the candidate experencing financial stress: financial_stress 
+    datatype: yesnoradio
+    help: |
+      Financial stress is a state of worry, anxiety, or emotional tension related to money, debt, and upcoming or current expenses. We define financial stress as anxiety-driven stress resulting from a financial event in a person’s life. Generally, this occurs around a major life event, such as experiencing domestic violence. 
+---
+mandatory: True
+code: |
+  if financial_stress and is_eligible:
+    is_parliment_verified = True
+  else:
+    candidate_ineligible
+---
+# on success path - section 44 - Interview end state for successful progression
+mandatory: True
+question: |
+  ${candidate_name}! Because of your responses, you are elgible to recieve the escaping violence payment.
+subquestion:  |
+
+  The program includes a payment and other supports available to someone leaving a violent partner and is struggling with the finances to live their life in safety. Up to $5000 will be available, with up to $1500 in financial assistance and where needed goods and services such as removalists, bonds or basics for a new home and wrap around services including caseworkers support.
+  
+  Please contact this number for support.
+
+buttons:
+  - Restart: restart
+  - Exit: exit
+    url: https://ucwb.org.au/escaping-violence-payment/
+---
+# not eligible event - living arrangements
+event: living_ineligible
+question: |
+  ${candidate_name} is ineligible as the application suggests that you may not be living in danger. Please tick the correct response if you are in danger.
+subquestion: |
+  If you are in danger, or your circumstances are not listed, please tick the I am not sure box. 
+buttons:
+  - Restart: restart
+  - Exit: exit
+    url: https://ucwb.org.au/escaping-violence-payment/
+---
+# not eligible event - candidate
+event: candidate_ineligible
+question: |
+  ${candidate_name} is ineligible as a candidate to recieve the escaping violence payment.
+subquestion: |
+  Sorry ${candidate_name}, but only eligible candidates may recieve the escaping violence payment.
+buttons:
+  - Restart: restart
+  - Exit: exit
+    url: https://ucwb.org.au/escaping-violence-payment/
+---
