@@ -1,0 +1,15 @@
+# Code for NILs 4 Vehicles starts here
+question: | 
+  Have you lived at current address for more than 3 months?
+fields:
+  - no label: housing_arrangement
+    datatype: yesnoradio
+action buttons:
+  code: exit_button
+---
+question: |
+  Proof user can repay the loan
+field: loan_repayment_proof
+action buttons:
+  code: exit_button
+---
