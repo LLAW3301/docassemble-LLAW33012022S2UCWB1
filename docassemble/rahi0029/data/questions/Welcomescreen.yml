@@ -1,95 +1,170 @@
+code: |
+  exit_button = [{'action': 'https://ucwb.org.au//', 'label': 'Exit', 'color': 'danger'}]
 ---
+include:
+  - EAP_Service.yml
+  - EVP_Service.yml
+  - FC_Service.yml
+  - NIL_Service.yml
+  - N4V_Service.yml  
+  - TH_Service.yml    
+---
+# First question in application
+question: Welcome to the Uniting Care Westley Bowden eligibility App
 mandatory: True
-question: Uniting Care Wesley Bowden (UCWB) eligibility
 subquestion: |
+  # This app may help determine individual eligibility toward Uniting Care Westley Bowden financial counselling services.
 
-  This application is designed to identify whether you are eligible for any of the following services UCWB provides:
+  **Disclaimer** The information contained in this website and processed by this app is for general guidance on matters of financial counselling elligibility only. The information provided by this App is of an informative, general interest purpose, only. It is not internded to be advice and you should not act specfically on the nasis of this information alone. If you are seeking financial advice, please see a registered financial planner. If expert assistance is required, professional advice should be obtained The App and impact of laws can very widely based on the specific facts involved. Given the changing nature of laws, rules and regulations, and the inherent hazards of electronic communication, there may be delays, omissions or inaccuracies in information contained in this site. 
   
-  * Emergency Assistance Payment
-  * Escaping Violence Payment
-  * Financial Counselling
-  * No Interest Loans
-  * No Interest Loans (specifically for vehicles)
-  * Tax Help
- 
-  ***Privacy disclaimer:***   
-  This application will collect your personal information. 
-  
-  Personal information will include: your full name, address, contact phone number and/or email. 
-  
-  Depending on the services you wish to seek, information about your income may also be collected. 
-  
-  *This information will only be used by UCWB for the purpose of identifying your eligibility for UCWB services, and to be able to contact you.* 
-  
-  **Do you accept these terms?**
-buttons:
-  Exit application: exit
-  Yes: continue
-  No: exit
+  Press *continue* to continue, or *exit* to exit to the Uniting Care Westley Bowden website
+buttons: 
+  - Continue: continue
+  - Exit: exit
+    url: https://ucwb.org.au//
 ---
-mandatory: True
-question: Personal details
+question: |
+  Please enter your name
 fields:
-  - What is your first name?: clientfirstname
-  - What is your last name?: clientlastname
-  - What suburb do you live in?: clientsuburb
-  - What is your contact phone number?: clientphone
-  - What is your email?: clientemail
+  - no label: name
 action buttons:
-  - label: Exit application
-    action: exit
+  code: exit_button
+mandatory: True
+---
+question: |
+  Please select your preferred contact method
+fields:
+  - no label: preferred_contact_method
+    choices:
+      - Phone Number: phone_number
+      - Email: email
+action buttons:
+  code: exit_button
+mandatory: True
+---
+
+#Branching logic starts here
+---
+objects:
+  - user: Individual
+  - endpoint: DADict
 ---
 mandatory: True
 question: |
-  Which UCWB services do you wish to access?
+  What financial service/s are you looking for? (Select all that apply)
 fields:
-  - Select all the services you wish to access: serviceligibilitytorun
+  - no label: user.service
     datatype: checkboxes
     choices:
-      - Emergency Assistance Payment: emergencyassistpay
-      - Escaping Violence Payment: escapeviolpay
-      - Financial Counselling: fincounselling
-      - No Interest Loans: nointerloan
-      - No Interest Loans for vehicles: nointerloanvehicle
-      - Tax Help: taxhelp
-help: |
- ## What does each service provide?
-  
- **Emergency Assistance Payment**
-    
-    Through this service you can access vouchers for essential items and services such as:
-    
-  * Food (provided by Foodbank)
-  * Transport 
-  * Chemist
-  * Payment of bills
-
-  **Escaping Violence Payment**
-  
-  This service may be available to you if you are experiencing violence from your partner.
-  
-  The service is designed to provide you with financial assistance if you are leaving a violent partner and are struggling to live safely, away from your partner, due to financial difficulties.
-  
-  **Financial Counselling**
-  
-  Financial counsellors will be able to assist you regarding debt you may have. For example, they can help you to plan a way out of debt, and guide you as to other financial options that may be open to you.
-  
-  Financial counsellors can also talk to debt collectors and creditors on your behalf to resolve issues you may have with debt.
-  
-  *NOTE: UCWB financial counsellors CANNOT advise you on which financial option is best for you. UCWB counsellors can only tell you which options are available to you.*
-  
-  *For advice on which option is best for you, please seek the advice of a licensed financial adviser.* 
-  
-  **No Interest Loans**
-  
-  Both the general no interest loans service and no interest loans for vehicles can provide you with a loan at no interest to purchase essential goods and services.
-  
-  **Tax Help**
-  
-  Trained UCWB volunteers can help you to manage your tax obligations.
-
+      - Emergency Assistance Payment: ea_service
+      - Escaping Violence Payment: ev_service
+      - Financial Counselling: fc_service
+      - No interest loans: nil_service
+      - NILs 4 vehicles: n4v_service
+      - Tax Help: th_service
 action buttons:
-  - label: Exit application
-    action: exit
+  code: exit_button
 ---
-  
+mandatory: True
+code: |
+    if user.service['ea_service']:
+      user.ea_service
+      if user.ea_service.all_false():
+        endpoint1
+      elif user.ea_service.any_true():
+        ea_service_q2
+        if ea_service_q2:
+          endpoint_12
+        else:
+          suburb_areas
+          if suburb_areas.any_true():
+            endpoint_11
+
+    if user.service['ev_service']:
+      user.ev_service
+      user.ev_service_criteria = True
+      if user.ev_service or not user.ev_service:
+        if not user.ev_service:
+          user.ev_service_criteria = False
+        residency_status
+        if residency_status or not residency_status:
+          if not residency_status:
+            user.ev_service_criteria = False
+          ip_violence
+          if ip_violence or not ip_violence:
+            if not ip_violence:
+              user.ev_service_criteria = False          
+            living_arrangements
+            if living_arrangements or not living_arrangements:
+              if not living_arrangements:
+                user.ev_service_criteria = False
+              financial_stress
+              if financial_stress or not financial_stress:
+                if not financial_stress:
+                  user.ev_service_criteria = False                         
+                if user.ev_service_criteria:
+                  endpoint_21
+                else:
+                  endpoint_2
+
+    if user.service['fc_service']:
+      user.fc_service
+      if user.fc_service.all_false():
+        endpoint_3
+      else:
+        suburbs_fc
+        if suburbs_fc:
+          areas_fc
+          endpoint_32
+        else:
+          endpoint_31
+
+    if user.service['nil_service']:
+      health_care_card
+      nil_status
+      if nil_status == 'single':
+        annual_income_single
+        if int(annual_income_single) < 70000:
+          loan_repayment_options
+          if loan_repayment_options.all_false():
+            endpoint_42
+          else:
+            endpoint_41
+        else:
+          endpoint_4
+      else:
+          annual_income_couple
+          if int(annual_income_couple) < 100000:
+            loan_repayment_options
+            if loan_repayment_options.all_false():
+              endpoint_42
+            else:
+              endpoint_41
+          else:
+            endpoint_4
+
+
+    if user.service['n4v_service']:
+      health_care_card
+      housing_arrangement
+      if not housing_arrangement:
+        endpoint_4
+      else:
+        loan_repayment_proof
+        if loan_repayment_proof:
+          endpoint_41
+        else:
+          endpoint_42
+            
+    if user.service['th_service']:
+      income_tax
+      if income_tax > '60000':
+        endpoint_5
+      else:
+        circumstances_th
+        if circumstances_th.all_false():
+          endpoint_5
+        else:
+          endpoint_51
+    ending_screen
+---
