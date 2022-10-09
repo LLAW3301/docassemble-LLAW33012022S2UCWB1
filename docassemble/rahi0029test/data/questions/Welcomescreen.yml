@@ -9,7 +9,7 @@ include:
   - N4V_Service.yml  
   - TH_Service.yml    
 ---
-# First question in application + disclaimer
+# First question in application
 question: Welcome to the Uniting Care Wesley Bowden eligibility application
 mandatory: True
 subquestion: |
@@ -18,6 +18,8 @@ subquestion: |
   **Disclaimer:** 
   
   The information contained and processed by this application is for general guidance on matters of eligibility only. The information is not intended to be advice and you should not act specifically on the basis of this information alone.
+  
+  If you are seeking financial advice, please see a financial adviser. UCWB cannot provide advice as to what financial options are best for you, they can only provide advice as to what options are available to you. A financial adviser will be able to assist you in making a decision as to what option would be best for you.
   
   If expert assistance is required, professional advice should be obtained. This includes for legal matters.
   
@@ -71,7 +73,7 @@ fields:
 help: |
   **Emergency Assistance Payment**
   
-  This services= provides vouchers for essential items and services, including food (through Foodbank), transport, and for pharmacy products. You may also be able to receive assistance for the payment of bills where necessary.
+  This service provides vouchers for essential items and services, including food (through Foodbank), transport, and for pharmacy products. You may also be able to receive assistance for the payment of bills where necessary.
   
   **Escaping Violence Payment**
   
@@ -79,7 +81,7 @@ help: |
   
   **Financial Counselling**
   
-  If you are struggling with financial debt, UCWB's qualified and independent financial counsellors can assist you to plan a way out of your debt. For example, they can talk to debt collectors on your behalf to resolve debt issues. They can also guide you in understanding what other financial options are available to you.
+  If you are struggling with financial debt, UCWB's qualified and independent financial counsellors can assist you to plan a way out of your debt. For example, they can talk to debt collectors on your behalf to resolve debt issues. They can also guide you in understanding what other financial options are available to you. 
   
   *However*, they cannot guide you as to what financial option is best for you. Please seek the assistance of a financial adviser if you need assistance to decide which financial option to take.
   
@@ -94,7 +96,7 @@ help: |
   **Tax Help**
   
   This service is run by UCWB volunteers who are trained by the Australian Taxation Office (ATO) to help you manage your tax obligations. 
-  
+ 
 action buttons:
   code: exit_button
 ---
@@ -112,7 +114,6 @@ code: |
           suburb_areas
           if suburb_areas.any_true():
             endpoint_11
-
     if user.service['ev_service']:
       user.ev_service
       user.ev_service_criteria = True
@@ -139,7 +140,6 @@ code: |
                   endpoint_21
                 else:
                   endpoint_2
-
     if user.service['fc_service']:
       user.fc_service
       if user.fc_service.all_false():
@@ -151,7 +151,6 @@ code: |
           endpoint_32
         else:
           endpoint_31
-
     if user.service['nil_service']:
       health_care_card
       nil_status
@@ -175,8 +174,6 @@ code: |
               endpoint_41
           else:
             endpoint_4
-
-
     if user.service['n4v_service']:
       health_care_card
       housing_arrangement
