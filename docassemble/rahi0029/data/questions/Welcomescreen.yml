@@ -1,95 +1,198 @@
+code: |
+  exit_button = [{'action': 'https://ucwb.org.au//', 'label': 'Exit', 'color': 'danger'}]
 ---
+include:
+  - EAP_Service.yml
+  - EVP_Service.yml
+  - FC_Service.yml
+  - NIL_Service.yml
+  - N4V_Service.yml  
+  - TH_Service.yml    
+---
+# First question in application + disclaimer
+question: Welcome to the Uniting Care Wesley Bowden eligibility application
 mandatory: True
-question: Uniting Care Wesley Bowden (UCWB) eligibility
 subquestion: |
-
-  This application is designed to identify whether you are eligible for any of the following services UCWB provides:
+  **This app will help determine your individual eligibility for Uniting Care Wesley Bowden (UCWB) financial services that you wish to access.**
+  **Disclaimer:** 
   
-  * Emergency Assistance Payment
-  * Escaping Violence Payment
-  * Financial Counselling
-  * No Interest Loans
-  * No Interest Loans (specifically for vehicles)
-  * Tax Help
- 
-  ***Privacy disclaimer:***   
-  This application will collect your personal information. 
+  The information contained and processed by this application is for general guidance on matters of eligibility only. The information is not intended to be advice and you should not act specifically on the basis of this information alone.
   
-  Personal information will include: your full name, address, contact phone number and/or email. 
+  If expert assistance is required, professional advice should be obtained. This includes for legal matters.
   
-  Depending on the services you wish to seek, information about your income may also be collected. 
+  Press *Continue* to continue, or *Exit* to exit to the Uniting Care Wesley Bowden website.
   
-  *This information will only be used by UCWB for the purpose of identifying your eligibility for UCWB services, and to be able to contact you.* 
-  
-  **Do you accept these terms?**
-buttons:
-  Exit application: exit
-  Yes: continue
-  No: exit
+buttons: 
+  - Continue: continue
+  - Exit: exit
+    url: https://ucwb.org.au//
 ---
-mandatory: True
-question: Personal details
+question: |
+  Please enter your full name.
 fields:
-  - What is your first name?: clientfirstname
-  - What is your last name?: clientlastname
-  - What suburb do you live in?: clientsuburb
-  - What is your contact phone number?: clientphone
-  - What is your email?: clientemail
+  - no label: name
 action buttons:
-  - label: Exit application
-    action: exit
+  code: exit_button
+mandatory: True
+---
+question: |
+  Please provide your preferred contact method and contact details.
+fields:
+  - Preferred contact method: preferred_contact_method
+    choices:
+      - Phone Number: phone_number
+      - Email: email
+  - Phone number: client_phonenumber
+  - Email: client_email
+action buttons:
+  code: exit_button
+mandatory: True
+---
+#Branching logic starts here
+---
+objects:
+  - user: Individual
+  - endpoint: DADict
 ---
 mandatory: True
 question: |
-  Which UCWB services do you wish to access?
+  What financial service/s are you looking for? (Select all that apply)
 fields:
-  - Select all the services you wish to access: serviceligibilitytorun
+  - no label: user.service
     datatype: checkboxes
     choices:
-      - Emergency Assistance Payment: emergencyassistpay
-      - Escaping Violence Payment: escapeviolpay
-      - Financial Counselling: fincounselling
-      - No Interest Loans: nointerloan
-      - No Interest Loans for vehicles: nointerloanvehicle
-      - Tax Help: taxhelp
+      - Emergency Assistance Payment: ea_service
+      - Escaping Violence Payment: ev_service
+      - Financial Counselling: fc_service
+      - No Interest Loans: nil_service
+      - No Interest Loans for Vehicles: n4v_service
+      - Tax Help: th_service
 help: |
- ## What does each service provide?
+  **Emergency Assistance Payment**
   
- **Emergency Assistance Payment**
-    
-    Through this service you can access vouchers for essential items and services such as:
-    
-  * Food (provided by Foodbank)
-  * Transport 
-  * Chemist
-  * Payment of bills
-
+  This services= provides vouchers for essential items and services, including food (through Foodbank), transport, and for pharmacy products. You may also be able to receive assistance for the payment of bills where necessary.
+  
   **Escaping Violence Payment**
   
-  This service may be available to you if you are experiencing violence from your partner.
-  
-  The service is designed to provide you with financial assistance if you are leaving a violent partner and are struggling to live safely, away from your partner, due to financial difficulties.
+  If you are experiencing violence by your partner and are struggling to live safely away from your partner due to financial difficulties you may be eligible for financial assistance through this service.
   
   **Financial Counselling**
   
-  Financial counsellors will be able to assist you regarding debt you may have. For example, they can help you to plan a way out of debt, and guide you as to other financial options that may be open to you.
+  If you are struggling with financial debt, UCWB's qualified and independent financial counsellors can assist you to plan a way out of your debt. For example, they can talk to debt collectors on your behalf to resolve debt issues. They can also guide you in understanding what other financial options are available to you.
   
-  Financial counsellors can also talk to debt collectors and creditors on your behalf to resolve issues you may have with debt.
-  
-  *NOTE: UCWB financial counsellors CANNOT advise you on which financial option is best for you. UCWB counsellors can only tell you which options are available to you.*
-  
-  *For advice on which option is best for you, please seek the advice of a licensed financial adviser.* 
+  *However*, they cannot guide you as to what financial option is best for you. Please seek the assistance of a financial adviser if you need assistance to decide which financial option to take.
   
   **No Interest Loans**
   
-  Both the general no interest loans service and no interest loans for vehicles can provide you with a loan at no interest to purchase essential goods and services.
+  This service can provide you with a loan at no interest to purchase essential goods and services. You will need to be able to show you can repay the loan.
+  
+  **No Interest Loans for Vehicles**
+  
+  This service is the same as 'No Interest Loans', however is specifically designed for borrowing money to purchase an essential vehicle.
   
   **Tax Help**
   
-  Trained UCWB volunteers can help you to manage your tax obligations.
-
+  This service is run by UCWB volunteers who are trained by the Australian Taxation Office (ATO) to help you manage your tax obligations. 
+  
 action buttons:
-  - label: Exit application
-    action: exit
+  code: exit_button
+---
+mandatory: True
+code: |
+    if user.service['ea_service']:
+      user.ea_service
+      if user.ea_service.all_false():
+        endpoint1
+      elif user.ea_service.any_true():
+        ea_service_q2
+        if ea_service_q2:
+          endpoint_12
+        else:
+          suburb_areas
+          if suburb_areas.any_true():
+            endpoint_11
+    if user.service['ev_service']:
+      user.ev_service
+      user.ev_service_criteria = True
+      if user.ev_service or not user.ev_service:
+        if not user.ev_service:
+          user.ev_service_criteria = False
+        residency_status
+        if residency_status or not residency_status:
+          if not residency_status:
+            user.ev_service_criteria = False
+          ip_violence
+          if ip_violence or not ip_violence:
+            if not ip_violence:
+              user.ev_service_criteria = False          
+            living_arrangements
+            if living_arrangements or not living_arrangements:
+              if not living_arrangements:
+                user.ev_service_criteria = False
+              financial_stress
+              if financial_stress or not financial_stress:
+                if not financial_stress:
+                  user.ev_service_criteria = False                         
+                if user.ev_service_criteria:
+                  endpoint_21
+                else:
+                  endpoint_2
+    if user.service['fc_service']:
+      user.fc_service
+      if user.fc_service.all_false():
+        endpoint_3
+      else:
+        suburbs_fc
+        if suburbs_fc:
+          areas_fc
+          endpoint_32
+        else:
+          endpoint_31
+    if user.service['nil_service']:
+      health_care_card
+      nil_status
+      if nil_status == 'single':
+        annual_income_single
+        if int(annual_income_single) < 70000:
+          loan_repayment_options
+          if loan_repayment_options.all_false():
+            endpoint_42
+          else:
+            endpoint_41
+        else:
+          endpoint_4
+      else:
+          annual_income_couple
+          if int(annual_income_couple) < 100000:
+            loan_repayment_options
+            if loan_repayment_options.all_false():
+              endpoint_42
+            else:
+              endpoint_41
+          else:
+            endpoint_4
+    if user.service['n4v_service']:
+      health_care_card
+      housing_arrangement
+      if not housing_arrangement:
+        endpoint_4
+      else:
+        loan_repayment_proof
+        if loan_repayment_proof:
+          endpoint_41
+        else:
+          endpoint_42
+            
+    if user.service['th_service']:
+      income_tax
+      if income_tax > '60000':
+        endpoint_5
+      else:
+        circumstances_th
+        if circumstances_th.all_false():
+          endpoint_5
+        else:
+          endpoint_51
+    ending_screen
 ---
   
