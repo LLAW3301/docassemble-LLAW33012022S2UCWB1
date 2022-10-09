@@ -42,10 +42,10 @@ def find_package_data(where='.', package='', exclude=standard_exclude, exclude_d
                 out.setdefault(package, []).append(prefix+name)
     return out
 
-setup(name='docassemble.rahi0029',
+setup(name='docassemble.rahi0029test',
       version='0.0.1',
       description=('A docassemble extension.'),
-      long_description='# docassemble.UCWBwelcomescreen\r\n\r\nA docassemble extension.\r\n\r\n## Author\r\n\r\nAlison Rahier, rahi0029@flinders.edu.au\r\n\r\n',
+      long_description='# docassemble.rahi0029test\r\n\r\nA docassemble extension.\r\n\r\n## Author\r\n\r\nAlison Rahier, rahi0029@flinders.edu.au\r\n\r\n',
       long_description_content_type='text/markdown',
       author='Alison Rahier',
       author_email='rahi0029@flinders.edu.au',
@@ -55,6 +55,6 @@ setup(name='docassemble.rahi0029',
       namespace_packages=['docassemble'],
       install_requires=[],
       zip_safe=False,
-      package_data=find_package_data(where='docassemble/rahi0029/', package='docassemble.rahi0029'),
+      package_data=find_package_data(where='docassemble/rahi0029test/', package='docassemble.rahi0029test'),
      )
 
