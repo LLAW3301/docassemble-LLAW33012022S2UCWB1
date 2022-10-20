@@ -1,0 +1,136 @@
+# Code for Tax Help starts from here
+question: |
+  What is your annual income?
+fields:
+  - no label: income_tax
+    datatype: currency
+action buttons:
+  code: exit_button
+---
+question: Your financial circumstances
+subquestion: |
+  **Did any of the following apply to you during the last financial year?**
+  
+fields:
+  - no label: circumstances_th
+    datatype: checkboxes
+    choices:
+      - Work as a contractor: circumstance1
+        help: | 
+          For example:
+          * A contract cleaner
+          * Taxi driver
+          * Uber driver
+      - Run a business (including as a soletrader): circumstance 2
+      - Have a partnership of trust matters: circumstance 3
+      - You sold shares or an investment property: circumstance 4
+      - Own a rental property: circumstance 5
+      - Have capital gains tax: circumstance 6
+      - Receive royalties: circumstance 7
+      - Receive distributions from a trust, other than a managed fund: circumstance 8
+      - Receive foreign income (that is not a foreign pension or annuity): circumstance 9
+action buttons:
+  code: exit_button
+---
+question: Eligibility status
+subquestion: |
+  Based on the answers you have provided:
+  
+  You are **not** likely to be eligible for Tax Help. 
+  
+  You can contact UCWB on 08 8245 7177 for further assistance or visit the [UCWB Tax Help](https://ucwb.org.au/tax-help/) page.
+  
+  Alternatively, you may be eligible for a similar program at the [ATO's Tax Help Program](https://www.ato.gov.au/Individuals/Your-tax-return/Help-and-support-to-lodge-your-tax-return/Tax-Help-program/). 
+ 
+field: endpoint_5
+action buttons:
+  code: exit_button
+---
+question: Eligibility status
+subquestion: |
+  Based on the answers you have provided:
+  
+  You are **likely** to be eligible for UCWB's tax help.
+  
+  You have been referred to the team at UCWB, who will contact you.
+  
+  You can contact UCWB on 08 8245 7177 for further assistance or visit the [UCWB Tax Help](https://ucwb.org.au/tax-help/) page.
+  
+field: endpoint_51
+action buttons:
+  code: exit_button
+---
+event: ending_screen
+question: Summary of your eligibility
+subquestion: |
+  
+  **PLEASE NOTE:** 
+  
+  The following summary of eligibility is not a final determination of your eligibility.
+  
+  It is only an indication of whether you are *likely* to be eligible. 
+  
+  UCWB will be in contact with you regarding the final status of your eligibility for the services you have indicated you wish to access.
+  
+  **If you wish to access an Escaping Violence Payment** please refer to your eligibility as indicated when filling out the form provided, which is also available [here](https://www.unitingvictas.org.au/escaping-violence-payment-enquiry-form/).
+  
+  Service | Eligibility
+  --------|------------
+  % if user.service['ea_service']:
+  % if user.ea_service.all_false():
+  **Emergency Assistance** | No
+  % elif user.ea_service.any_true():
+  % if ea_service_q2:
+  **Emergency Assistance**  | Yes
+  Assistance Available | ${user.ea_service.true_values()}
+  % elif suburb_areas:
+  **Emergency Assistance** | Yes
+  Payments Available | ${user.ea_service.true_values()}
+  % else:
+  **Emergency Assistance** | No
+  % endif
+  % endif
+  % endif
+  % if user.service['fc_service']:
+  % if user.fc_service.all_false():
+  **Financial Counselling** | No
+  % elif suburbs_fc:
+  **Financial Counselling** | Yes
+  % else:
+  **Financial Counselling** | Yes
+  % endif
+  % endif
+  % if user.service['nil_service']:
+  % if health_care_card:
+  **No Interest Loan** | Yes
+  % elif annual_income_single < 70000:
+  **No Interest Loan** | Yes
+  % elif annual_income_couple < 100000:
+  **No Interest Loan** | Yes
+  % elif loan_repayment_options:
+  **No Interest Loan** | Yes
+  % else: 
+  **No Interest Loan** | No
+  % endif
+  % endif
+  % if user.service['n4v_service']:
+  % if health_care_card and housing_arrangement and loan_repayment_proof:
+  **No Interest Loan (vehicles)** | Yes
+  % else:
+  **No Interest Loan (vehicles)** | No
+  % endif
+  % endif
+  % if user.service['th_service']:
+  % if income_tax > 60000:
+  **Tax Help** | No
+  % elif circumstances_th.any_true():
+  **Tax Help** | No
+  % else:
+  **Tax Help** | Yes
+  % endif
+  % endif
+action buttons:
+  code: exit_button
+buttons:
+  Restart: restart
+---
