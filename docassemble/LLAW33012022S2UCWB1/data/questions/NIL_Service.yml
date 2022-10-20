@@ -15,7 +15,7 @@ fields:
     choices:
       - Single: single
       - Part of a couple: couple
-      - Dependent Children: dependent_children
+      - Have dependent children (whether you are single or part of a couple): dependent_children
 action buttons:
   code: exit_button
 ---
@@ -23,23 +23,30 @@ question: |
   What is your annual income as a single?
 fields: 
   - no label: annual_income_single
+    datatype: currency
 action buttons:
   code: exit_button
 ---
-question: |
-  What is your annual income as a couple?
+question: What is your annual income?
+subquestion: |
+
+  ***If you are single and have children*** - please enter your income as a single
+  
+  ***If you are part of a couple and have children*** - please enter your income as a couple
+  
+  ***If you are part of a couple and do not have children*** - please enter your income as a couple
+  
 fields:
   - no label: annual_income_couple
+    datatype: currency
 action buttons:
   code: exit_button
 ---
-question: |
-  What option could you use to repay the loan?
+question: Would you be able to repay the loan within 2 years?
 fields:
   - no label: loan_repayment_options
-    datatype: checkboxes
-    choices:
-      - Choice 1: choice1
+    datatype: yesnoradio
+    
 action buttons:
   code: exit_button
 ---
@@ -49,7 +56,9 @@ subquestion: |
   
   You are **unlikely** to be eligible for a no interest loan.
   
-  Please contact UCWB on 08 8245 7139 for further assistance.
+  You can contact UCWB on 08 8245 7177 for further assistance or visit the [UCWB No Interest Loans](https://ucwb.org.au/no-interest-loans/) page.
+  
+  For information on no interest loans for vehicles, click [here](https://ucwb.org.au/nils4vehicles/).
   
   Alternatively, you may be eligible for a similar loan at [Good Shepard Australia](https://goodshep.org.au/services/nils/).
  
@@ -65,6 +74,10 @@ subquestion: |
  
   You have been referred to the team at UCWB, who will contact you.
   
+  You can contact UCWB on 08 8245 7177 for further assistance or visit the [UCWB No Interest Loans](https://ucwb.org.au/no-interest-loans/) page.
+  
+  For information on no interest loans for vehicles, click [here](https://ucwb.org.au/nils4vehicles/).
+  
 field: endpoint_41
 action buttons:
   code: exit_button
@@ -75,9 +88,11 @@ subquestion: |
   
   You are **unlikely** to be eligible for a no interest loan.
 
-  This is based on your inability to repay the loan
+  This is based on your inability to repay the loan.
   
-  Please contact UCWB on 08 8245 7139 for further assistance.
+  You can contact UCWB on 08 8245 7177 for further assistance or visit the [UCWB No Interest Loans](https://ucwb.org.au/no-interest-loans/) page.
+  
+  For information on no interest loans for vehicles, click [here](https://ucwb.org.au/nils4vehicles/).
   
   Alternatively, you may be eligible for a similar loan at [Good Shepard Australia](https://goodshep.org.au/services/nils/).
   

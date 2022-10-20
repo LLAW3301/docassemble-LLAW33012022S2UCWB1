@@ -6,14 +6,11 @@ fields:
 action buttons:
   code: exit_button
 ---
-question: What option could you use to repay the loan?
+question: Would you be able to repay the loan within 2 years?
 fields: 
   - no label: loan_repayment_proof
-    datatype: checkboxes
-    choices:
-    - Choice 1: choice1
-    - Choice 2: choice2
-    - Choice 3: choice3        
+    datatype: yesnoradio
+    
 action buttons:
   code: exit_button
 ---
