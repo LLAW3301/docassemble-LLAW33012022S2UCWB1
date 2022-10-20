@@ -1,0 +1,156 @@
+# Code for Emergency Assistance starts here
+question: |
+  Are you struggling to pay for any of the following?
+fields:
+  - no label: user.ea_service
+    datatype: checkboxes
+    choices:
+      - Food: food
+      - Medication: medication
+      - Transport: transport
+      - Bills: bills
+action buttons:
+  code: exit_button  
+---
+# Does not meet eligibility requirements - is not struggling with the four options provided
+question: Eligibility status
+subquestion: |
+  Based on the answers you have provided:
+   
+  You are **not** eligible for Emergency Assistance. 
+  
+  You can contact UCWB on 08 8245 7139 for further assistance or visit the [UCWB Emergency Assistance](https://ucwb.org.au/emergency-assistance/) page.
+  
+  For urgent food assistance, you can also contact:
+  
+  * Foodbank on 08 8351 1136; or
+  * Salvation Army Food Services on 1300 371 288.
+  
+field: endpoint1
+action buttons:
+  code: exit_button
+---
+# Endpoint for when user meets eligibility, but does not live in an area UCWB provides for
+question: Eligibility status
+subquestion: |
+  Based on the answers you have provided:
+  
+  You are **likely** to be eligible for Emergency Assistance.
+  
+  **You are likely to be eligible for:**
+  
+  % if user.ea_service['food']:
+  * Foodbank vouchers
+  % endif
+  % if user.ea_service['medication']:
+  * Chemist vouchers
+  % endif
+  % if user.ea_service['transport']:
+  * Transport assistance
+  % endif
+  % if user.ea_service['bills']:
+  * Assistance with payment of bills
+  % endif
+  
+  However, based on your location, your details will be provided to UCWB who will be in contact with you and may refer you to the Uniting*Care* in your area.
+  
+  Alternatively, you can contact UCWB on 08 8245 7139 for further assistance or visit the [UCWB Emergency Assistance](https://ucwb.org.au/emergency-assistance/) page.
+  
+  For urgent food assistance, you can also contact:
+  
+  * Foodbank on 08 8351 1136; or
+  * Salvation Army Food Services on 1300 371 288.
+field: endpoint_11
+action buttons:
+  code: exit_button
+---
+# Endpoint for when user meets all eligibility requirements, and they live in the area UCWB provides for
+question: Eligibility status
+subquestion: |
+  Based on the answers you have provided:
+  
+  You are **likely** to be eligible for Emergency Assistance.
+  
+  **You are likely eligible for:**
+  % if user.ea_service['food']:
+  * Foodbank vouchers
+  % endif
+  % if user.ea_service['medication']:
+  * Chemist vouchers
+  % endif
+  % if user.ea_service['transport']:
+  * Transport assistance
+  % endif
+  % if user.ea_service['bills']:
+  * Assistance with payment of bills
+  % endif
+  
+  Your details have been provided to UCWB who will be in contact regarding your eligibility.
+  
+  Alternatively, you can contact 08 8245 7139 for further assistance or visit the [UCWB Emergency Assistance](https://ucwb.org.au/emergency-assistance/) page.
+  
+  For urgent food assistance you can also contact:
+  
+  * Foodbank on 08 8351 1136; or
+  * Salvation Army Food Services on 1300 371 288. 
+  
+field: endpoint_12
+action buttons:
+  code: exit_button
+---
+# This question is to know whether UCWB can provide the service for the user based on their location
+question: Do you live in one of the following suburbs?
+subquestion: |
+  Postcode | Suburbs
+  ---------|----------------------------
+  **5007**     | Bowden, Brompton, Hindmarsh, West Hindmarsh
+  **5008**     | Croydon, Croydon Park, Devon Park, Dudley Park
+  **5009**     | Allenby Gardens, Beverly, Kilkenny
+  **5010**     | Angle Park, Ferryden Park, Regency Park
+  **5012**     | Athol Park, Mansfield Park
+  **5013**     | Gillman, Ottoway, Pennington
+  **5014**     | Albert Park, Alberton, Cheltenham, Hendon, Queenstown
+  **5015**     | Birkenhead, Ethelton, Glanville, Port Adelaide, New Port
+  **5016**     | Largs Bay, Largs North, Peterhead
+  **5017**     | Osborne
+  **5018**     | North Haven
+  **5019**     | Exeter
+  **5022**     | Grange, Henley Beach
+  **5023**     | Findon
+  **5024**   | Fulham, Fulham Gardens
+  **5025**     | Flinders Park, Kidman Park
+  **5031**    | Mile End, Mile End South
+  **5032**    | Brooklyn Park, Lockleys
+  **5033**     | Cowandilla, Hilton
+  **5045**    | Glenelg North
+  **5082**    | Fitzroy, Ovingham, Prospect
+  **5084**     | Blair Athol, Kilburn
+  
+fields:
+  - no label: ea_service_q2
+    datatype: yesnoradio
+---
+# This question assists UCWB to know what UnitingCare they may need to refer the user to (if they do not live in a suburb UCWB provides for, for the EAP service)
+question: |
+  What area do you live in or closest to?
+fields:
+  - no label: suburb_areas
+    datatype: radio
+    choices:
+      - Enfield: area1
+      - Gawler: area2
+      - Glenelg: area3
+      - Kapunda: area4
+      - Modbury: area5
+      - Mount Barker: area6
+      - Mount Gambier: area7
+      - Naracoorte: area8
+      - Noarlunga: area9
+      - North Adelaide: area10
+      - Salisbury: area11
+      - Taperoo: area12
+      - Woodville Gardens: area13
+    
+action buttons:
+  code: exit_button
+---

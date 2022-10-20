@@ -1,0 +1,155 @@
+# Code for Financial Counselling starts from here
+question: Financial counselling eligibility
+subquestion: |
+  **PLEASE NOTE:** UCWB financial counsellors cannot provide you with advice as to what financial options will suit you best. Please see a financial adviser to discuss such matters.
+  
+  UCWB can also not provide you with any legal advice.
+  
+  UCWB counsellors can assist you to plan a way out of your debt. For example, they can talk to debt collectors on your behalf to resolve debt issues. They can also guide you in understanding what other financial options are available to you. 
+  
+ 
+  **Do any of the following apply to you?**
+  
+fields: 
+  - no label: user.fc_service
+    datatype: checkboxes
+    choices:
+      - Struggling to pay bills or fines: criteria1
+      - Being harassed by debt collectors: criteria2
+      - Have been disconnected from your gas, electricity or phone: criteria3
+      - Have been or are being evicted from your house: criteria4
+      - Have been in a car accident without insurance: criteria5
+      - Have tax debts: criteria6
+action buttons:
+  code: exit_button
+---
+# To know if UCWB can provide for them, based on the locations they provide Financial Counselling service to
+question: Do you live in one of the following suburbs?
+subquestion: |
+  
+  Postcode | Suburbs
+  ---------|--------
+  **5007**     | Bowden, Brompton, Hindmarsh, Welland, West Hindmarsh
+  **5008**     | Croydon Park, Devon Park, Dudley Park, Renown Park, Ridleyton, West Croydon
+  **5009**     | Allenby Gardens, Beverley, Kilkenny
+  **5010**     | Angle Park, Ferryden Park, Regency Park
+  **5011**     | St Clair, Woodville, Woodville Park, Woodville South, Woodville West
+  **5012**     | Athol Park, Mansfield Park, Woodville Gardens, Woodville North
+  **5013**     | Gillman, Ottoway, Pennington, Rosewater, Wingfield
+  **5014**     | Alberton, Albert Park, Cheltenham, Hendon Park, Queenstown, Royal Park
+  **5015**     | Birkenhead, Ethelton, Glanville, New Port, Port Adelaide
+  **5016**     | Largs Bay, Largs North, Peterhead
+  **5017**     | Osborne, Taperoo
+  **5018**     | North Haven, Outer Harbor
+  **5019**     | Exeter, Semaphore, Semaphore Park, Semaphore South
+  **5020**     | West Lakes Shore
+  **5021**     | West Lakes
+  **5022**     | Grange, Henley Beach, Henley Beach South, Tennyson
+  **5023**     | Findon, Seaton
+  **5024**     | Fulham, Fulham Gardens, West Beach
+  **5025**     | Flinders Park, Kidman Park
+  **5031**     | Mile End, Mile End South, Thebarton, Torrensville
+  **5032**     | Brooklyn Park, Lockleys, Underdale
+  **5033**     | Cowandilla, Hilton, Marleston, Richmond, West Richmond, 
+  **5035**     | Ashford, Keswick, Keswick Terminal
+  **5037**     | Glandore, Kurralta Park, Netley, North Plympton
+  **5038**     | Camden Park, Plympton, Plympton Park, South Plympton
+  **5039**     | Clarence Gardens, Edwardstown, Melrose Park
+  **5040**     | Novar Gardens
+  **5041**     | Colonel Light Gardens, Cumberland Park, Daw Park, Panorama, Westbourne Park
+  **5042**     | Bedford Park, Clovelly Park, Pasadena, St Marys, Tonsley
+  **5043**     | Ascot Park, Marion, Mitchell Park, Morphettville, Park Holme
+  **5044**     | Glengowrie, Somerton Park
+  **5045**     | Glenelg, Glenelg East, Glenelg North, Glenelg South
+  **5046**     | Oaklands Park, Warradale
+  **5047**     | Darlington, Seacombe Gardens, Seacombe Heights, Sturt
+  **5048**     | Brighton, Dover Gardens, Hove, North Brighton, South Brighton
+  **5049**     | Kingston Park, Marino, Seacliff, Seacliff Park, Seaview Downs
+  **5050**     | Bellevue Heights, Eden Hills
+  **5051**     | Blackwood, Craigburn Farm, Hawthorndene
+  **5052**     | Belair, Glenalta
+  **5062**     | Brown Hill Creek, Clapham, Hawthorn, Kingswood, Lower Mitcham, Lynton, Mitcham, Netherby, Springfield, Torrens Park
+  **5064**     | Urrbrae
+  **5082**     | Ovingham
+  **5083**     | Broadview, Sefton Park
+  **5084**     | Blair Athol, Kilburn
+  **5085**     | Clearview, Enfield, Lightsview, Northfield, Northgate
+  **5086**     | Gilles Plains, Green Acres, Hampstead Gardens, Hill Crest, Manningham, Oakden 
+  **5087**     | Klemzig, Windsor Gardens
+  **5093**     | Valley View, 
+  **5094**     | Cavan, Dry Creek, Gepps Cross
+  **5150**     | Leawood Gardens
+  **5158**     | Hallett Cove, O'Halloran Hill, Sheidow Park, Trott Park
+  **5950**     | Adelaide Airport
+  **5960**     | Garden Island, Torrens Island
+  
+fields: 
+  - no label: suburbs_fc
+    datatype: yesnoradio
+action buttons:
+  code: exit_button
+---
+question: What area do you live in or closest to?
+fields:
+  - no label: areas_fc
+    input type: radio
+    choices:
+      - Enfield: area1
+      - Gawler: area2
+      - Glenelg: area3
+      - Kapunda: area4
+      - Modbury: area5
+      - Mount Barker: area6
+      - Mount Gambier: area7
+      - Naracoorte: area8
+      - Noarlunga: area9
+      - North Adelaide: area10
+      - Salisbury: area11
+      - Taperoo: area12
+      - Woodville Gardens: area13
+    
+action buttons:
+  code: exit_button
+---
+question: Eligibility status
+subquestion: |
+  Based on the answers you have provided:
+  
+  You are **not** likely to be eligible for Financial Counselling.
+  
+  You can contact UCWB on 08 8245 7177 for further assistance or visit the [UCWB Financial Counselling](https://ucwb.org.au/financial-counselling/) page.
+  
+  Alternatively, you may be eligible for similar counselling at [Financial Counselling Australia](https://www.financialcounsellingaustralia.org.au/).
+  
+field: endpoint_3
+action buttons:
+  code: exit_button
+---
+question: Eligibility status
+subquestion: |
+  Based on the answers you have provided:
+  
+  You are **likely** to be eligible for Financial Counselling. 
+  
+  You have been referred to the team at UCWB, who will contact you.
+  
+   Alternatively, you can contact UCWB on 08 8245 7177 for further assistance or visit the [UCWB Financial Counselling](https://ucwb.org.au/financial-counselling/) page.
+  
+field: endpoint_31
+action buttons:
+  code: exit_button
+---
+question: Eligibility status
+subquestion: |
+  Based on the answers you have provided:
+  
+  You are **likely** to be eligible for Financial Counselling.
+  
+  However, based on your location, your details will be provided to UCWB who will be in contact with you and may refer you to the Uniting*Care* in your area.
+  
+  Alternatively, you can contact UCWB on 08 8245 7177 for further assistance or visit the [UCWB Financial Counselling](https://ucwb.org.au/financial-counselling/) page.
+  
+field: endpoint_32
+action buttons:
+  code: exit_button
+---
