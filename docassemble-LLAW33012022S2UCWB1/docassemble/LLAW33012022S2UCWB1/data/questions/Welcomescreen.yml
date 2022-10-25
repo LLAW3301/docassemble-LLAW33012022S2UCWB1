@@ -1,0 +1,196 @@
+# Disabling menus for better user experience
+features:
+  debug: False
+  hide standard menu: True
+---
+# Interview title description
+metadata:
+  title: |
+    Eligibility for financial health services
+  short title: |
+    UCWB Eligibility
+  description: |
+    A UCWB eligibility interview
+  authors:
+    - name: Alison Rahier, Ava Willington, Monique Woltynski, Trevor Morris, Victor Barrientos-Opazo
+      organization: Flinders University
+  revision_date: 24-10-2022
+---
+# So all screens attribute application to Flinders Uni and UCWB
+default screen parts:
+  post: |
+    <div style="display: flex; height: 200px; align-items: flex-end; flex-direction: row-reverse">
+    <div style="margin: 5px"><img src="https://staff.flinders.edu.au/etc.clientlibs/flinders/clientlibs/clientlib-site/resources/images/flinderuni_main_logo_black.png" height="40">
+    </div>
+    <div style="margin: 5px; text-align: right">
+    <cite><small><i>
+    Developed by Flinders University in collaboration with Uniting Care Wesley Bowden Inc.
+    </i></small></cite>
+    </div>
+    </div>
+---
+code: |
+  exit_button = [{'action': 'https://ucwb.org.au//', 'label': 'Exit', 'color': 'danger'}]
+---
+include:
+  - EAP_Service.yml
+  - EVP_Service.yml
+  - FC_Service.yml
+  - NIL_Service.yml
+  - N4V_Service.yml  
+  - TH_Service.yml
+---
+# First question in application
+question: Welcome to *Connection Zone*
+mandatory: True
+subquestion: |
+  **This app will help determine your individual eligibility for Uniting*Care* Wesley Bowden's (UCWB) Financial Health Services that you wish to access.**
+  
+  **Disclaimer:** 
+  
+  The information contained and processed by this application is for general guidance on matters of eligibility only. The information is not intended to be advice and you should not act specifically on the basis of this information alone.
+  
+  Press *Continue* to continue, or *Exit* to exit to the UCWB website.
+  
+buttons: 
+  - Continue: continue
+  - Exit: exit
+    url: https://ucwb.org.au//
+---
+# Personal information collection
+question: |
+  Please enter your full name.
+fields:
+  - no label: name
+    default: Client Name
+action buttons:
+  code: exit_button
+mandatory: True
+---
+# Personal information collection
+question: |
+  Please provide your preferred contact method and contact details.
+fields:
+  - Preferred contact method: preferred_contact_method
+    choices:
+      - Phone Number: phone_number
+      - Email: email
+    default: phone_number
+  - Phone number: client_phonenumber
+    default: 0412 345 678
+  - Email: client_email
+    default: clientemail@flinders.edu.au
+action buttons:
+  code: exit_button
+mandatory: True
+---
+#Branching logic starts here
+---
+objects:
+  - user: Individual
+  - endpoint: DADict
+---
+# User selects what services they wish to access
+mandatory: True
+question: |
+  What Financial Health Service/s are you looking for?
+subquestion: |
+  **Select all that apply.**
+fields:
+  - no label: user.service
+    datatype: checkboxes
+    choices:
+      - Emergency Assistance: ea_service
+        help: |
+          We provide a free confidential service for people experiencing financial distress or hardship in Western Adelaide. We can provide essential items including Foodbank vouchers, transport assistance, chemist vouchers and bill payments where necessary.
+      - Escaping Violence Payment: ev_service
+        help: |
+          The Escaping Violence Payment (EVP) Program is available for people 18+ who have recently experienced intimate partner violence, have a changed living situation and are experiencing financial stress.
+      - Financial Counselling: fc_service
+        help: |
+          Our free financial counselling service, with qualified, independent and compassionate financial counsellors, can guide you through your financial options and help you plan your way out of debt. In a caring and non-judgemental way, we will listen to you and help you understand your available options,
+          
+          We can help you with budgeting and managing your money, and provide you with information about your rights as a consumer. We can support and advocate for you, which may include helping you to speak with your creditors, or speaking with them on your behalf. 
+          
+          Financial counselling can help you with things like - bills or fines you are struggling to pay; being harassed by debt collectors; gas, electricity or phone disconnection; being evicted from your house; car accidents with no insurance; and tax debts.
+      - No Interest Loans: nil_service
+        help: |
+          No Interest Loans (NILs) enables people and families to access fair, safe and affordable credit to purchase essential goods and services to the maximum value of **$2,000**. Loans are free from fees, charges, and interest.
+          
+          Pay back only what you borrow. NILs is a smart choice financial option to help you pay for essentials and get what you need right now.
+       
+      - No Interest Loans for Vehicles: n4v_service
+        help: |
+          We facilitate your application for a No Interest Loan for vehicles. This is a safe and fair option for people and families on low incomes to purchase a vehicle for essential use. No Interest Loans for vehicles are available for **$2,000-$5,000** for the purchase of an essential vehicle including: cars, scooters, mobility scooters, motorcycles and boats.
+          
+          Pay back only what you borrow - no fees or interest.
+      - Tax Help: th_service
+        help: |
+            This program is free and helps people earning $60,000 or less lodge their tax return online. From July to October each year, our accredited volunteers help people lodge their tax returns online. 
+            
+            Our volunteers can also help you to: create a myGov account, lodge an amendment to your tax return, claim a refund of franking credits or tell us if you do not need to lodge a tax return.
+action buttons:
+  code: exit_button
+---
+# Code for application to move to correct screens according to choices made on previous screens
+mandatory: True
+code: |
+    if user.service['ea_service']:
+      user.ea_service
+      if user.ea_service.all_false():
+        endpoint1
+      elif user.ea_service.any_true():
+        ea_service_q2
+        if ea_service_q2:
+          endpoint_12
+        else:
+          suburb_areas
+          if suburb_areas:
+            endpoint_11
+    if user.service['ev_service']:
+      user.ev_service
+    if user.service['fc_service']:
+      user.fc_service
+      if user.fc_service.all_false():
+        endpoint_3
+      elif user.fc_service.any_true():
+        suburbs_fc
+        if suburbs_fc:
+          endpoint_31
+        else: 
+          areas_fc
+          if areas_fc:
+            endpoint_32
+    if user.service['nil_service']:
+      health_care_card
+      if health_care_card:
+        endpoint_41
+      else:
+        nil_status
+        if nil_status:
+          annual_income_single
+          if int(annual_income_single) < 70000:
+            endpoint_41
+          elif int(annual_income_single) >= 70000:
+            endpoint_4
+        elif nil_status:
+          annual_income_couple
+          if int(annual_income_couple) < 100000:
+            endpoint_41
+    if user.service['n4v_service']:
+      if housing_arrangement == True:
+        endpoint_41
+      elif housing_arrangement == False:
+        endpoint_4
+    if user.service['th_service']:
+      income_tax
+      if income_tax > 60000:
+        endpoint_5
+      else:
+        circumstances_th
+        if circumstances_th.any_true():
+          endpoint_5
+        else:
+          endpoint_51
+    ending_screen
+---
