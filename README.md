@@ -9,4 +9,4 @@ The application is designed to provide an easier way for potential clients to un
 Users are also provided with details for other service providers (no matter if eligible or ineligible for UCWB services) as a means of ensuring users can still be provided with the support they need.
 
 # Authors
-Alison Rahier, Ava Willington, Monique Woltynski, Trevor Morris & Victor-Barrientos-Opazo
+Alison Rahier, Ava Willington, Monique Woltynski, Trevor Morris & Victor Barrientos-Opazo
