@@ -34,7 +34,7 @@ code: |
 ---
 initial: True
 code: |
-  stats_email = "alisonrahier@hotmail.com"
+  stats_email = "rahi0029@flinders.edu.au"
 ---
 include:
   - EAP_Service.yml
