@@ -146,10 +146,87 @@ subquestion: |
   **Tax Help** | Yes
   % endif
   % endif
+  
+  % if email_sent_ok:
+  Your eligibility has been sent to UCWB.
+  % else:
+  Error: Your eligibility could not be sent to UCWB.
+  % endif
 
 action buttons:
   code: exit_button
   
 buttons:
   Restart: restart
+---
+code: |
+  email_sent_ok = send_email(to=stats_email, template=interview_results)
+---
+template: interview_results
+subject: |
+  Connection Zone - Client Eligibility
+content: |
+  
+  **Client Name**: ${name}
+  
+  **Preferred Contact Method**: ${preferred_contact_method}
+  
+    **Phone Number**: ${client_phonenumber}
+    
+    **Email**: ${client_email}
+  
+  Service | Eligibility
+  --------|------------
+  % if user.service['ea_service']:
+  % if user.ea_service.all_false():
+  **Emergency Assistance** | No
+  % elif user.ea_service.any_true():
+  % if ea_service_q2:
+  **Emergency Assistance**  | Yes
+  Assistance Available | ${user.ea_service.true_values()}
+  % elif suburb_areas:
+  **Emergency Assistance** | Yes
+  Payments Available | ${user.ea_service.true_values()}
+  % else:
+  **Emergency Assistance** | No
+  % endif
+  % endif
+  % endif
+  % if user.service['fc_service']:
+  % if user.fc_service.all_false():
+  **Financial Counselling** | No
+  % elif suburbs_fc:
+  **Financial Counselling** | Yes
+  % else:
+  **Financial Counselling** | Yes
+  % endif
+  % endif
+  % if user.service['nil_service']:
+  % if health_care_card:
+  **No Interest Loan** | Yes
+  % elif annual_income_single < 70000:
+  **No Interest Loan** | Yes
+  % elif annual_income_couple < 100000:
+  **No Interest Loan** | Yes
+  % else: 
+  **No Interest Loan** | No
+  % endif
+  % endif
+  % if user.service['n4v_service']:
+  % if housing_arrangement:
+  **No Interest Loan (vehicles)** | Yes
+  % else:
+  **No Interest Loan (vehicles)** | No
+  % endif
+  % endif
+  % if user.service['th_service']:
+  % if income_tax > 60000:
+  **Tax Help** | No
+  % elif circumstances_th.any_true():
+  **Tax Help** | No
+  % else:
+  **Tax Help** | Yes
+  % endif
+  % endif
+  
 ---

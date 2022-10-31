@@ -32,6 +32,10 @@ default screen parts:
 code: |
   exit_button = [{'action': 'https://ucwb.org.au//', 'label': 'Exit', 'color': 'danger'}]
 ---
+initial: True
+code: |
+  stats_email = "alisonrahier@hotmail.com"
+---
 include:
   - EAP_Service.yml
   - EVP_Service.yml
@@ -73,9 +77,9 @@ question: |
 fields:
   - Preferred contact method: preferred_contact_method
     choices:
-      - Phone Number: phone_number
+      - Phone Number: phone
       - Email: email
-    default: phone_number
+    default: phone
   - Phone number: client_phonenumber
     default: 0412 345 678
   - Email: client_email
@@ -167,13 +171,13 @@ code: |
         endpoint_41
       else:
         nil_status
-        if nil_status:
+        if nil_status == 'single':
           annual_income_single
           if int(annual_income_single) < 70000:
             endpoint_41
           elif int(annual_income_single) >= 70000:
             endpoint_4
-        elif nil_status:
+        else:
           annual_income_couple
           if int(annual_income_couple) < 100000:
             endpoint_41
