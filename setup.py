@@ -42,10 +42,10 @@ def find_package_data(where='.', package='', exclude=standard_exclude, exclude_d
                 out.setdefault(package, []).append(prefix+name)
     return out
 
-setup(name='docassemble.rahi0029',
+setup(name='docassemble.LLAW33012022S2UCWB1',
       version='0.0.1',
       description=('A docassemble extension.'),
-      long_description='# docassemble.UCWBwelcomescreen\r\n\r\nA docassemble extension.\r\n\r\n## Author\r\n\r\nAlison Rahier, rahi0029@flinders.edu.au\r\n\r\n',
+      long_description="**Connection Zone**\r\n\r\nThis application was developed by Flinders University students in collaboration with Uniting*Care* Wesley Bowden Inc. (UCWB).\r\n\r\nThe application is designed to provide an easier way for potential clients to understand what UCWB's Financial Health Services can provide, as well as an easier and faster way to assess their eligibility for these services. Clients otherwise tend to contact the UCWB hotline consequently usually delaying the provision of a service to a client, and taking essential resources away from UCWB which could be better used.\r\n\r\nThrough this application, users are also provided with details for other service providers to ensure users can still access the support they need, even if it cannot be through UCWB.\r\n\r\n**Authors**\r\nAlison Rahier, Ava Willington, Monique Woltynski, Trevor Morris & Victor Barrientos-Opazo.",
       long_description_content_type='text/markdown',
       author='Alison Rahier',
       author_email='rahi0029@flinders.edu.au',
@@ -55,6 +55,6 @@ setup(name='docassemble.rahi0029',
       namespace_packages=['docassemble'],
       install_requires=[],
       zip_safe=False,
-      package_data=find_package_data(where='docassemble/rahi0029/', package='docassemble.rahi0029'),
+      package_data=find_package_data(where='docassemble/LLAW33012022S2UCWB1/', package='docassemble.LLAW33012022S2UCWB1'),
      )
 
